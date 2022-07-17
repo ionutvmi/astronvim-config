@@ -19,6 +19,9 @@ local config = {
   options = {
     opt = {
       relativenumber = false, -- sets vim.opt.relativenumber
+      list = true, 
+      listchars = "tab:-->,trail:·,extends:·,nbsp:·,space:·",
+      tabstop = 4,
     },
     g = {
       mapleader = " ", -- sets vim.g.mapleader
@@ -88,6 +91,12 @@ local config = {
         },
       },
     },
+  },
+
+  mappings = {
+    n = {
+      ["<F3>"] = { "<CMD>nohl<CR>", desc = "Remove highlights" }
+    }
   },
 
   -- This function is run last
