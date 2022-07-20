@@ -95,22 +95,43 @@ local config = {
 
   mappings = {
     n = {
-      ["<F3>"] = { "<CMD>nohl<CR>", desc = "Remove highlights" }
+      ["<F3>"] = { "<CMD>nohl<CR>", desc = "Remove highlights" },
+      ["<F5>"] = { 
+        function() 
+        if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "modified") then
+          vim.api.nvim_command('write')
+        end
+
+          astronvim.toggle_term_cmd({
+            cmd = "make run",
+            direction = "vertical",
+            close_on_exit = false,
+          }) 
+        end, 
+        desc = "ToggleTerm Run make" 
+      },
+    },
+    i = {
+      ["<C-s>"] = { "<esc><CMD>w!<CR>", desc = "Save file" }
     }
   },
 
   -- This function is run last
   -- good place to configuring augroups/autocommands and custom filetypes
   polish = function()
+
     -- Set key binding
     -- Set autocommands
-    -- vim.api.nvim_create_augroup("packer_conf", { clear = true })
-    -- vim.api.nvim_create_autocmd("BufWritePost", {
-    --   desc = "Sync packer after modifying plugins.lua",
-    --   group = "packer_conf",
-    --   pattern = "plugins.lua",
-    --   command = "source <afile> | PackerSync",
-    -- })
+    vim.api.nvim_create_augroup('Misc', {clear = true})
+    vim.api.nvim_create_autocmd("BufWritePost", {
+      group = "Misc",
+      desc = "Format the current file",
+      pattern = "*.go",
+      callback = function()
+        vim.api.nvim_command("cexpr system('gofmt -e -w ' . expand('%'))")
+        vim.api.nvim_command("edit")
+      end,
+    })
 
     -- Set up custom filetypes
     -- vim.filetype.add {
